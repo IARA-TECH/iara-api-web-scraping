@@ -43,15 +43,10 @@ Essa automação reduz a necessidade de coleta manual e permite que o ecossistem
 
 ## 🧩 Como Funciona
 
-1. O cliente realiza uma requisição GET para o endpoint da API, informando o site ou categoria desejada.
-2. O servidor realiza uma **requisição HTTP** à página de origem.
-3. O conteúdo HTML é processado com o **BeautifulSoup**, extraindo:
-
-   * Título da notícia
-   * Fonte ou portal
-   * Data de publicação
-   * Link original
-4. Os dados são estruturados em **JSON** e retornados ao cliente de forma limpa e padronizada.
+1.
+2.
+3.
+4. 
 
 ---
 
