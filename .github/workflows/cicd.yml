@@ -1,0 +1,140 @@
+# IARA API Web Scraping de Notícias
+
+Desenvolvimento de uma **API Python** voltada à **extração automatizada de notícias** a partir de fontes online, utilizando **técnicas de web scraping** e **processamento estruturado de dados**.
+O sistema coleta, organiza e retorna informações em formato **JSON**, facilitando a integração com outros módulos e sistemas da **IARA Tech**.
+
+---
+
+## 📚 Sumário
+
+* [💡 Sobre o Projeto](#-sobre-o-projeto)
+* [⚙️ Tecnologias Utilizadas](#️-tecnologias-utilizadas)
+* [🧩 Como Funciona](#-como-funciona)
+* [🧰 Como Executar](#-como-executar)
+* [📂 Estrutura do Projeto](#-estrutura-do-projeto)
+* [📊 Exemplo de Saída](#-exemplo-de-saída)
+* [👩‍💻 Autores](#-autores)
+
+---
+
+## 💡 Sobre o Projeto
+
+A **IARA API Web Scraping de Notícias** foi desenvolvida como parte do ecossistema **IARA Tech**, com o objetivo de **automatizar a coleta e o processamento de notícias em tempo real**.
+
+O sistema utiliza **requisições HTTP** e **parsing de HTML** para extrair dados relevantes (como título, fonte, data e link da notícia), fornecendo uma interface **rápida, padronizada e integrável** para consumo por outras aplicações.
+
+Essa automação reduz a necessidade de coleta manual e permite que o ecossistema IARA mantenha-se atualizado com informações recentes e verificáveis de fontes confiáveis.
+
+---
+
+## ⚙️ Tecnologias Utilizadas
+
+* **Linguagem:** Python 3.10+
+* **Framework:** FastAPI
+* **Bibliotecas Principais:**
+
+  * `requests` — Requisições HTTP para captura do conteúdo das páginas
+  * `BeautifulSoup4` — Extração e parsing de dados HTML
+  * `pydantic` — Validação e tipagem dos dados retornados
+  * `uvicorn` — Servidor ASGI de alta performance
+* **Outros:** GitHub Actions (CI/CD), Docker (opcional)
+
+---
+
+## 🧩 Como Funciona
+
+1. O cliente realiza uma requisição GET para o endpoint da API, informando o site ou categoria desejada.
+2. O servidor realiza uma **requisição HTTP** à página de origem.
+3. O conteúdo HTML é processado com o **BeautifulSoup**, extraindo:
+
+   * Título da notícia
+   * Fonte ou portal
+   * Data de publicação
+   * Link original
+4. Os dados são estruturados em **JSON** e retornados ao cliente de forma limpa e padronizada.
+
+---
+
+## 🧰 Como Executar
+
+### 1. Clonar o repositório
+
+```bash
+git clone https://github.com/<usuario>/iara-api-web-scraping.git
+cd iara-api-web-scraping
+```
+
+### 2. Criar e ativar ambiente virtual (opcional, mas recomendado)
+
+```bash
+python -m venv venv
+source venv/bin/activate   # Linux/Mac
+venv\Scripts\activate      # Windows
+```
+
+### 3. Instalar dependências
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Executar a API
+
+```bash
+uvicorn main:app --reload
+```
+
+> ⚠️ Certifique-se de possuir o **Python 3.10+** instalado.
+
+A aplicação será iniciada em:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+## 📂 Estrutura do Projeto
+
+```
+iara-api-web-scraping/
+│
+├── main.py                  # Ponto de entrada da aplicação FastAPI
+├── routes/
+│   └── news_routes.py       # Definição dos endpoints de scraping de notícias
+├── services/
+│   └── scraping_service.py  # Lógica principal de coleta e processamento dos dados
+├── models/
+│   └── news_model.py        # Modelos Pydantic usados na validação das respostas
+├── utils/
+│   └── helpers.py           # Funções auxiliares de parsing e limpeza de texto
+├── requirements.txt         # Dependências do projeto
+└── .github/workflows/       # Pipelines de CI/CD (GitHub Actions)
+```
+
+---
+
+## 📊 Exemplo de Saída
+
+```json
+{
+  "source": "G1",
+  "title": "Avanço tecnológico impulsiona startups brasileiras",
+  "link": "https://g1.globo.com/economia/tecnologia/noticia/2025/10/28/startups-brasileiras-2025.ghtml",
+  "published_at": "2025-10-28T09:30:00"
+}
+```
+
+---
+
+## 👩‍💻 Autores
+
+**IARA Tech**
+
+Projeto interdisciplinar desenvolvido por alunos do **Instituto J&F**, com foco em **automação, coleta e análise inteligente de informações**.
+
+📍 São Paulo, Brasil
+📧 [iaratech.oficial@gmail.com](mailto:iaratech.oficial@gmail.com)
+🌐 [https://github.com/IARA-TECH](https://github.com/IARA-TECH)
+
+---
