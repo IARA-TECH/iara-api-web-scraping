@@ -15,8 +15,8 @@ app = FastAPI(
 
 # Lista padrão de palavras-chave
 DEFAULT_KEYWORDS = [
-    "indústria avícola", "processamento de frango", "frigorífico", "exportação de frango",
-    "importação de frango", "mercado avícola", "preço do frango", "custos industriais",
+    "indústria avícola", "processamento de frango", "exportação de frango",
+    "preço do frango", "inovação industrial", "susten"
     # "cadeia produtiva", "produção intensiva", "automação industrial", "logística avícola",
     # "qualidade da carne", "normas sanitárias", "inspeção federal", "certificação de alimentos",
     # "SIF", "selo SIF", "vistorias SIF", "inovação tecnológica", "biotecnologia avícola",
@@ -40,6 +40,7 @@ WEBSITES = [{
 
 
 def search_articles(keywords: List[str], websites: List[dict[str, str]]):
+    print('a')
     relevant_news = []
 
     for website in websites:
@@ -56,7 +57,11 @@ def search_articles(keywords: List[str], websites: List[dict[str, str]]):
 
                     articles = article_list.find_all("li")
 
+                    count = 0
                     for li in articles:
+                        if count == 5:
+                            break
+
                         titulo_tag = li.find("h2")
                         titulo = titulo_tag.get_text(strip=True) if titulo_tag else None
 
@@ -78,6 +83,8 @@ def search_articles(keywords: List[str], websites: List[dict[str, str]]):
                                 "fonte": default_url
                             })
 
+                        count = count + 1
+
                 except Exception as e:
                     print(f"Erro ao acessar {default_url}: {e}")
 
@@ -93,12 +100,3 @@ def get_news(keywords: List[str] = Query(DEFAULT_KEYWORDS)):
     """
     news = search_articles(keywords, WEBSITES)
     return {"total_count": len(news), "data": news}
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(
-        app,
-        host=os.getenv("APP_HOST", "0.0.0.0"),
-        port=int(os.getenv("APP_PORT", "8080")),
-    )
