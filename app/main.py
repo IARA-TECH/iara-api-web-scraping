@@ -15,8 +15,7 @@ app = FastAPI(
 
 # Lista padrão de palavras-chave
 DEFAULT_KEYWORDS = [
-    "indústria avícola", "processamento de frango", "exportação de frango",
-    "preço do frango", "inovação industrial", "susten"
+    "indústria avícola", "inovação industrial", 'automatização de linha de produção'
     # "cadeia produtiva", "produção intensiva", "automação industrial", "logística avícola",
     # "qualidade da carne", "normas sanitárias", "inspeção federal", "certificação de alimentos",
     # "SIF", "selo SIF", "vistorias SIF", "inovação tecnológica", "biotecnologia avícola",
@@ -75,13 +74,14 @@ def search_articles(keywords: List[str], websites: List[dict[str, str]]):
                         lide = lide_tag.get_text(strip=True) if lide_tag else None
 
                         if titulo and url_noticia:
-                            relevant_news.append({
-                                "titulo": titulo,
-                                "url": url_noticia,
-                                "imagem": imagem,
-                                "lide": lide,
-                                "fonte": default_url
-                            })
+                            if not any(n["titulo"] == titulo or n["url"] == url_noticia for n in relevant_news):
+                                relevant_news.append({
+                                    "titulo": titulo,
+                                    "url": url_noticia,
+                                    "imagem": imagem,
+                                    "lide": lide,
+                                    "fonte": default_url
+                                })
 
                         count = count + 1
 
