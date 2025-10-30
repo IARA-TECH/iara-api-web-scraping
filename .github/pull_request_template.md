@@ -22,6 +22,6 @@ Forneça informações sobre as mudanças realizadas nesta PR, destacando de for
 
 ## ✅ Checklist antes de merge
 - [ ] Código revisado
-- [ ] Testes automatizados (ou validação manual) executados
+- [ ] Testes automatizados (e/ou validação manual) executados
 - [ ] Dependências listadas (requirements/pyproject)
 - [ ] Nenhum segredo hardcoded
