@@ -9,7 +9,6 @@ O sistema coleta, organiza e retorna informações em formato **JSON**, facilita
 
 * [💡 Sobre o Projeto](#-sobre-o-projeto)
 * [⚙️ Tecnologias Utilizadas](#️-tecnologias-utilizadas)
-* [🧩 Como Funciona](#-como-funciona)
 * [🧰 Como Executar](#-como-executar)
 * [📂 Estrutura do Projeto](#-estrutura-do-projeto)
 * [📊 Exemplo de Saída](#-exemplo-de-saída)
@@ -38,15 +37,6 @@ Essa automação reduz a necessidade de coleta manual e permite que o ecossistem
   * `pydantic` — Validação e tipagem dos dados retornados
   * `uvicorn` — Servidor ASGI de alta performance
 * **Outros:** GitHub Actions (CI/CD), Docker (opcional)
-
----
-
-## 🧩 Como Funciona
-
-1.
-2.
-3.
-4. 
 
 ---
 
