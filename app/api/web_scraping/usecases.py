@@ -1,85 +1,70 @@
+from typing import List
 import requests
 from bs4 import BeautifulSoup
+from ...shared.exceptions.internal_server_error import InternalServerError
+from .models import getData
 
-keywords = [
-    "indústria avícola", "processamento de frango", "frigorífico", "exportação de frango",
-    "importação de frango", "mercado avícola", "preço do frango", "custos industriais",
-    "cadeia produtiva", "produção intensiva", "automação industrial", "logística avícola",
-    "qualidade da carne", "normas sanitárias", "inspeção federal", "certificação de alimentos",
-    "SIF", "selo SIF", "vistorias SIF", "inovação tecnológica", "biotecnologia avícola",
-    "indústria de alimentos", "produção industrial", "processamento de carne", "abate industrial",
-    "estocagem frigorífica", "distribuição de frango", "armazenamento a frio", "exportação de ovos",
-    "indústria de ovos", "embalagem de frango", "rotulagem de alimentos", "industria alimentícia",
-    "produção em larga escala", "controle de qualidade", "mercado internacional", "exportadores de frango",
-    "investimentos industriais", "sustentabilidade industrial", "impacto ambiental", "normas ISO",
-    "gestão de produção", "automatização de linha de produção", "processamento de cortes",
-    "industrialização do frango", "cadeia logística", "indústria de proteína animal",
-    "produção de alimentos processados", "tecnologia de abate", "engenharia de alimentos",
-    "segurança alimentar", "regulamentação avícola", "granjas comerciais", "produção de pintinhos",
-    "alimentação de frangos", "sanidade avícola"
-]
 
-websites = [{"https://www.cnnbrasil.com.br": "https://www.cnnbrasil.com.br/?search={search}&orderby=date&order=desc"}]
+def get(keywords: List[str] = None, websites: List[dict[str, str]] = None) -> List[getData]:
 
-def search_articles(keywords: list[str], websites: list[dict[str, str]]):
-        
-        relevant_news = []
+    if not keywords:
+        keywords = [
+        'inovação-industrial', 'agropecuária', 'producao-frango'
+        ]
 
-        for website in websites:
-            for default_url, search_url in website.items():
-                for keyword in keywords:
-                    formatted_url = search_url.format(search=keyword.replace(" ", "+"))
-                    try:
-                        response = requests.get(formatted_url, timeout=10)
-                        soup = BeautifulSoup(response.content, "html.parser")
-                        article_list = soup.find("ul", {"data-section": "article_list"})
-                        if not article_list:
-                            print("Nenhuma lista de artigos encontrada.")
-                            exit()
+    if not websites: 
+        websites = [{
+            "https://www.cnnbrasil.com.br": 
+            "https://www.cnnbrasil.com.br/?search={search}&orderby=date&order=desc",
+        }]
 
-                        # pega todos os <li> dentro da lista
-                        articles = article_list.find_all("li")
+    relevant_news = []
 
-                        noticias = []
+    for website in websites:
+        for default_url, search_url in website.items():
+            for keyword in keywords:
+                formatted_url = search_url.format(search=keyword.replace(" ", "+"))
+                print(formatted_url)
+                try:
+                    response = requests.get(formatted_url, timeout=10)
+                    soup = BeautifulSoup(response.content, "html.parser")
 
-                        for li in articles:
-                            # título
-                            titulo_tag = li.find("h2")
-                            titulo = titulo_tag.get_text(strip=True) if titulo_tag else None
+                    article_list = soup.find("ul", {"data-section": "article_list"})
+                    if not article_list:
+                        continue
 
-                            # URL da notícia
-                            link_tag = li.find("a", href=True)
-                            url_noticia = link_tag["href"] if link_tag else None
+                    articles = article_list.find_all("li")
 
-                            # imagem
-                            img_tag = li.find("img")
-                            imagem = img_tag["src"] if img_tag else None
+                    count = 0
+                    for li in articles:
 
-                            # lide (resumo) — pode não existir, então testamos se há um <p> ou outro texto
-                            lide_tag = li.find("p")
-                            lide = lide_tag.get_text(strip=True) if lide_tag else None
+                        if count == 6:
+                            break
 
-                            # monta o dicionário
-                            if titulo and url_noticia:
-                                noticias.append({
+                        titulo_tag = li.find("h2")
+                        titulo = titulo_tag.get_text(strip=True) if titulo_tag else None
+
+                        link_tag = li.find("a", href=True)
+                        url_noticia = link_tag["href"] if link_tag else None
+
+                        img_tag = li.find("img")
+                        imagem = img_tag["src"] if img_tag else None
+
+                        lide_tag = li.find("p")
+                        lide = lide_tag.get_text(strip=True) if lide_tag else None
+
+                        if titulo and url_noticia:
+                            if not any(n["titulo"] == titulo or n["url"] == url_noticia for n in relevant_news):
+                                relevant_news.append({
                                     "titulo": titulo,
                                     "url": url_noticia,
                                     "imagem": imagem,
-                                    "lide": lide
+                                    "lide": lide,
+                                    "fonte": default_url
                                 })
+                                count = count + 1
 
-                        # exibe
-                        for n in noticias:
-                            print(n)
-                        # for h3 in headline_tags:
-                        #     headline = h3.get_text(strip=True)
-                        #     parent_a = h3.find_parent("a")
-                        #     link = parent_a.get("href") if parent_a else None
-                        #     relevant_news.append({'headline': headline, 'link':link, 'image':img,})
+                except Exception as e:
+                    raise InternalServerError('Buscar notícias')
 
-                    except Exception as e:
-                        print(f"Erro ao acessar {default_url}: {e}")
-    
-        return relevant_news
-
-search_articles(keywords, websites)
+    return relevant_news
